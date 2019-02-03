@@ -25,6 +25,72 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private String outId;		// 支出账户
 	private Date noteDate;		// 记录时间
 	private String dateStr; // 客户端发过来的日期字符串
+	private String startDate;
+	private String endDate;
+	private String year;
+	private String month;
+	private String day;
+	private Double inAmount;
+	private Double outAmount;
+
+	public Double getInAmount() {
+		return inAmount;
+	}
+
+	public void setInAmount(Double inAmount) {
+		this.inAmount = inAmount;
+	}
+
+	public Double getOutAmount() {
+		return outAmount;
+	}
+
+	public void setOutAmount(Double outAmount) {
+		this.outAmount = outAmount;
+	}
+
+	public void setYMD(String dataStr) {
+		this.setDateStr(dataStr);
+		String[] split = dataStr.split("-");
+		int cnt = split.length;
+		switch (cnt) {
+			case 1:
+				year = split[0];
+				break;
+			case 2:
+				year = split[0];
+				month = split[1];
+				break;
+			case 3:
+				year = split[0];
+				month = split[1];
+				day = split[2];
+				break;
+		}
+	}
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
 
 	public String getDateStr() {
 		return dateStr;
@@ -34,6 +100,21 @@ public class FinRecord extends DataEntity<FinRecord> {
 		this.dateStr = dateStr;
 	}
 
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 
 	public FinRecord() {
 		super();

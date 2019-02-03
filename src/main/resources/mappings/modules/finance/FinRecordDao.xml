@@ -23,7 +23,7 @@
 		<include refid="finRecordJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="FinRecord">
 		SELECT 
 			<include refid="finRecordColumns"/>
@@ -64,7 +64,102 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
+	<select id="getBusTypsList"  resultType="FinRecord">
+		SELECT bus_type,SUM(amount) amount
+		FROM fin_record
+			<where>
+				<if test="reType != null and reType != '' ">
+					and re_type = #{reType}
+				</if>
+			</where>
+ 		  GROUP BY bus_type
+	</select>
+
+	<select id="getDateSumList" resultType="FinRecord" >
+		<choose>
+			<when test="year != null and month != null and day != null" >
+				select
+				DATE_FORMAT(note_date,'%Y') "year",
+				DATE_FORMAT(note_date,'%Y-%m') "month",
+				DATE_FORMAT(note_date,'%Y-%m-%d') "day",
+				sum( case when amount &gt;=0 then amount else 0 end) in_amount ,
+				SUM( CASE WHEN amount &lt;= 0 THEN amount ELSE 0 END) out_amount
+				from fin_record
+				where DATE_FORMAT(note_date,'%Y-%m-%d')   = #{dateStr}
+				group by "day";
+			</when>
+			<when test="year != null and month != null">
+				SELECT
+				DATE_FORMAT(note_date,'%Y') "year",
+				DATE_FORMAT(note_date,'%Y-%m') "month",
+				DATE_FORMAT(note_date,'%Y-%m-%d') "day",
+				SUM( CASE WHEN amount &gt;= 0 THEN amount ELSE 0 END) in_amount ,
+				SUM( CASE WHEN amount &lt;= 0 THEN amount ELSE 0 END) out_amount
+				FROM fin_record
+				WHERE DATE_FORMAT(note_date,'%Y-%m')  = #{dateStr}
+				GROUP BY "month";
+			</when>
+			<when test="year != null">
+				SELECT
+				DATE_FORMAT(note_date,'%Y') "year",
+				DATE_FORMAT(note_date,'%Y-%m') "month",
+				DATE_FORMAT(note_date,'%Y-%m-%d') "day",
+				SUM( CASE WHEN amount &gt;= 0 THEN amount ELSE 0 END) in_amount ,
+				SUM( CASE WHEN amount &lt;= 0 THEN amount ELSE 0 END) out_amount
+				FROM fin_record
+				WHERE DATE_FORMAT(note_date,'%Y')  =#{dateStr}
+				GROUP BY "year";
+			</when>
+			<otherwise>
+				SELECT
+				DATE_FORMAT(note_date,'%Y') "year",
+				DATE_FORMAT(note_date,'%Y-%m') "month",
+				DATE_FORMAT(note_date,'%Y-%m-%d') "day",
+				SUM( CASE WHEN amount &gt;= 0 THEN amount ELSE 0 END) in_amount ,
+				SUM( CASE WHEN amount &lt;= 0 THEN amount ELSE 0 END) out_amount
+				FROM fin_record
+				WHERE DATE_FORMAT(note_date,'%Y')  = DATE_FORMAT(now(),'%Y')
+				GROUP BY "year";
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListByAccount" resultType="FinRecord">
+		SELECT
+		<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				and a.in_id = #{id} or a.out_id = #{id}
+			</if>
+			<if test="acName != null and acName != ''">
+				and a.in_id = #{acName} or a.out_id = #{acName}
+			</if>
+		</where>
+	</select>
+
+	<select id="findListBeginToEnd" resultType="FinRecord">
+		SELECT
+		<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		<where>
+			<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+				and DATE_FORMAT(note_date,'%Y-%m-%d')    BETWEEN #{startDate} AND #{endDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER  BY note_date DESC
+			</otherwise>
+		</choose>
+	</select>
 	<select id="findAllList" resultType="FinRecord">
 		SELECT 
 			<include refid="finRecordColumns"/>

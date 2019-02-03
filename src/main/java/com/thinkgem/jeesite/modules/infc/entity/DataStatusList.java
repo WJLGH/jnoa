@@ -9,14 +9,21 @@ import java.util.Map;
 public class DataStatusList {
     private String success;        //是否成功
     private String statusMessage;  //状态信息
-    //  private List<Object> data = Lists.newArrayList();	;            //数据集
-    private List<Map<String, Object>> data = Lists.newArrayList();     //数据
+    private Map<String,Object> mainData =  Maps.newHashMap()	;            //主数据
+    private List<Map<String, Object>> data = Lists.newArrayList();     //子数据列表
 
     public DataStatusList(){
         this.success = "false";
         this.statusMessage = "失败";
     }
 
+    public Map<String, Object> getMainData() {
+        return mainData;
+    }
+
+    public void setMainData(Map<String, Object> mainData) {
+        this.mainData = mainData;
+    }
     public String getSuccess() {
         return success;
     }
