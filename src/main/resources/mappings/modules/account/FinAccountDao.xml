@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.account.dao.FinAccountDao">
+    
+	<sql id="finAccountColumns">
+		a.id AS "id",
+		a.ac_type AS "acType",
+		a.card_num AS "cardNum",
+		a.ac_name AS "acName",
+		a.amount AS "amount"
+	</sql>
+	
+	<sql id="finAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="FinAccount">
+		SELECT 
+			<include refid="finAccountColumns"/>
+		FROM fin_account a
+		<include refid="finAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FinAccount">
+		SELECT 
+			<include refid="finAccountColumns"/>
+		FROM fin_account a
+		<include refid="finAccountJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="acType != null and acType != ''">
+				AND a.ac_type = #{acType}
+			</if>
+			<if test="cardNum != null and cardNum != ''">
+				AND a.card_num = #{cardNum}
+			</if>
+			<if test="acName != null and acName != ''">
+				AND a.ac_name = #{acName}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FinAccount">
+		SELECT 
+			<include refid="finAccountColumns"/>
+		FROM fin_account a
+		<include refid="finAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fin_account(
+			id,
+			ac_type,
+			card_num,
+			ac_name,
+			amount
+		) VALUES (
+			#{id},
+			#{acType},
+			#{cardNum},
+			#{acName},
+			#{amount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fin_account SET 	
+			ac_type = #{acType},
+			card_num = #{cardNum},
+			ac_name = #{acName},
+			amount = #{amount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fin_account
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
