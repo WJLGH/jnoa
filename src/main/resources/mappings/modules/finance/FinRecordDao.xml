@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finance.dao.FinRecordDao">
+    
+	<sql id="finRecordColumns">
+		a.id AS "id",
+		a.re_type AS "reType",
+		a.bus_type AS "busType",
+		a.amount AS "amount",
+		a.description AS "description",
+		a.in_id AS "inId",
+		a.out_id AS "outId",
+		a.note_date AS "noteDate"
+	</sql>
+	
+	<sql id="finRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="FinRecord">
+		SELECT 
+			<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FinRecord">
+		SELECT 
+			<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="reType != null and reType != ''">
+				AND a.re_type = #{reType}
+			</if>
+			<if test="busType != null and busType != ''">
+				AND a.bus_type = #{busType}
+			</if>
+			<if test="amount != null and amount != ''">
+				AND a.amount = #{amount}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="inId != null and inId != ''">
+				AND a.in_id = #{inId}
+			</if>
+			<if test="outId != null and outId != ''">
+				AND a.out_id = #{outId}
+			</if>
+			<if test="noteDate != null and noteDate != ''">
+				AND a.note_date = #{noteDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FinRecord">
+		SELECT 
+			<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fin_record(
+			id,
+			re_type,
+			bus_type,
+			amount,
+			description,
+			in_id,
+			out_id,
+			note_date
+		) VALUES (
+			#{id},
+			#{reType},
+			#{busType},
+			#{amount},
+			#{description},
+			#{inId},
+			#{outId},
+			#{noteDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fin_record SET 	
+			re_type = #{reType},
+			bus_type = #{busType},
+			amount = #{amount},
+			description = #{description},
+			in_id = #{inId},
+			out_id = #{outId},
+			note_date = #{noteDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fin_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

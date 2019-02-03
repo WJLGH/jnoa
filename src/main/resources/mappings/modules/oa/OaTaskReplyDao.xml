@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.oa.dao.OaTaskReplyDao">
+    
+	<sql id="oaTaskReplyColumns">
+		a.id AS "id",
+		a.oa_task_id AS "oaTask.id",
+		a.oa_record_id AS "oaTaskRecord.id",
+		a.send_user_id AS "sendUser",
+		a.rece_user_id AS "receUser",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.reply_flag AS "replyFlag",
+		a.reply_content AS "replyContent",
+		a.reply_date AS "replyDate",
+		a.year AS "year",
+		a.month AS "month",
+		a.day AS "day",
+		u11.name AS "receUser.name"
+	</sql>
+	
+	<sql id="oaTaskReplyJoins">
+		LEFT JOIN oa_task b ON b.id = a.oa_task_id
+		LEFT JOIN oa_task_record c ON c.id = a.oa_record_id
+		LEFT JOIN sys_user u11 ON u11.id = a.send_user_id
+	</sql>
+    
+	<select id="get" resultType="OaTaskReply">
+		SELECT 
+			<include refid="oaTaskReplyColumns"/>
+		FROM oa_task_reply a
+		<include refid="oaTaskReplyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaTaskReply">
+		SELECT 
+			<include refid="oaTaskReplyColumns"/>
+		FROM oa_task_reply a
+		<include refid="oaTaskReplyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="oaTask != null and oaTask.id != null and oaTask.id != ''">
+				AND a.oa_task_id = #{oaTask.id}
+			</if>
+			<if test="oaTaskRecord != null and oaTaskRecord.id != null and oaTaskRecord.id != ''">
+				AND a.oa_record_id = #{oaTaskRecord.id}
+			</if>
+			<if test="sendUser != null  and sendUser != ''">
+				AND a.send_user_id = #{sendUser}
+			</if>
+			<if test="receUser != null and receUser != ''">
+				AND a.rece_user_id = #{receUser}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="replyFlag != null and replyFlag != ''">
+				AND a.reply_flag = #{replyFlag}
+			</if>
+			<if test="replyContent != null and replyContent != ''">
+				AND a.reply_content = #{replyContent}
+			</if>
+			<if test="replyDate != null and replyDate != ''">
+				AND a.reply_date = #{replyDate}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="day != null and day != ''">
+				AND a.day = #{day}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.send_user_id,a.reply_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaTaskReply">
+		SELECT 
+			<include refid="oaTaskReplyColumns"/>
+		FROM oa_task_reply a
+		<include refid="oaTaskReplyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_task_reply(
+			id,
+			oa_task_id,
+			oa_record_id,
+			send_user_id,
+			rece_user_id,
+			remarks,
+			del_flag,
+			reply_flag,
+			reply_content,
+			reply_date,
+			year,
+			month,
+			day
+		) VALUES (
+			#{id},
+			#{oaTask.id},
+			#{oaTaskRecord.id},
+			#{sendUser},
+			#{receUser},
+			#{remarks},
+			#{delFlag},
+			#{replyFlag},
+			#{replyContent},
+			#{replyDate},
+			#{year},
+			#{month},
+			#{day}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_task_reply SET 	
+			oa_task_id = #{oaTask.id},
+			oa_record_id = #{oaTaskRecord.id},
+			send_user_id = #{sendUser},
+			rece_user_id = #{receUser},
+			remarks = #{remarks},
+			reply_flag = #{replyFlag},
+			reply_content = #{replyContent},
+			reply_date = #{replyDate},
+			year = #{year},
+			month = #{month},
+			day = #{day}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_task_reply SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE oa_task_id = #{oaTask.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>
