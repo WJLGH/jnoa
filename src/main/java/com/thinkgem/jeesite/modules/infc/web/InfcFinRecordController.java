@@ -50,15 +50,7 @@ public class InfcFinRecordController extends BaseController {
         if (entity == null){
             entity = new FinRecord();
         }
-        Map<String,Object> map = Maps.newHashMap();
-
-        map.put("amount",entity.getAmount());
-        map.put("reType",entity.getReType());
-        map.put("busType",entity.getBusType());
-        map.put("noteDate",new SimpleDateFormat("yyyy-MM-dd").format(entity.getNoteDate()));
-        map.put("description",entity.getDescription());
-        map.put("inId",entity.getInId());
-        map.put("outId",entity.getOutId());
+        Map<String, Object> map = getFinDetailMap(entity);
 //      使用Utils 将 对象 变为map 失败，json串为空
 //        try {
 //            map = PropertyUtils.describe(entity);
@@ -76,6 +68,25 @@ public class InfcFinRecordController extends BaseController {
         String r = this.renderString(response,status);
         return r;
     }
+
+    /**
+     * 将对象映射为 FinRecord 详细信息的 Map
+     * @param entity
+     * @return
+     */
+    private Map<String, Object> getFinDetailMap(FinRecord entity) {
+        Map<String,Object> map = Maps.newHashMap();
+
+        map.put("amount",entity.getAmount());
+        map.put("reType",entity.getReType());
+        map.put("busType",entity.getBusType());
+        map.put("noteDate",new SimpleDateFormat("yyyy-MM-dd").format(entity.getNoteDate()));
+        map.put("description",entity.getDescription());
+        map.put("inId",entity.getInId());
+        map.put("outId",entity.getOutId());
+        return map;
+    }
+
     /**
      * 接口参数 dateStr ：日期字符串
      *  年： 2019
@@ -87,10 +98,10 @@ public class InfcFinRecordController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "listSumDate",method = RequestMethod.GET)
-    public String listSumDate(HttpServletRequest request, HttpServletResponse response) {
-        String dateStr = request.getParameter("dateStr");
-        FinRecord finRecord = new FinRecord();
-        finRecord.setYMD(dateStr);
+    public String listSumDate(FinRecord finRecord ,HttpServletRequest request, HttpServletResponse response) {
+//        String dateStr = request.getParameter("dateStr");
+//        FinRecord finRecord = new FinRecord();
+//        finRecord.setDateStr(dateStr);
         DataStatusList status = new DataStatusList();
         try {
             FinRecord dateSum = finRecordService.getDateSum(finRecord);
@@ -114,6 +125,11 @@ public class InfcFinRecordController extends BaseController {
         return r;
     }
 
+    /**
+     * 将对象映射为 按日期的汇总信息 Map
+     * @param dateSum
+     * @return
+     */
     private Map<String, Object> getFinSumMap(FinRecord dateSum) {
         Map<String,Object> mainData = Maps.newHashMap();
         mainData.put("dateStr",dateSum.getDateStr());
@@ -161,6 +177,11 @@ public class InfcFinRecordController extends BaseController {
         return r;
     }
 
+    /**
+     * 将对象映射为交易类型的信息汇总对象
+     * @param entity
+     * @return
+     */
     private Map<String, Object> getFinBusTypeMap(FinRecord entity) {
         Map<String,Object> map = Maps.newHashMap();
         map.put("reType",entity.getReType());
@@ -178,15 +199,10 @@ public class InfcFinRecordController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "listFinRecord",method = RequestMethod.GET)
-    public String listFinRecord(HttpServletRequest request, HttpServletResponse response) {
-        String startDate = request.getParameter("startDate");
-        String endDate = request.getParameter("endDate");
-        FinRecord finRecord = new FinRecord();
-        finRecord.setStartDate(startDate);
-        finRecord.setEndDate(endDate);
+    public String listFinRecord(FinRecord entityParams ,HttpServletRequest request, HttpServletResponse response) {
         DataStatusList status = new DataStatusList();
         try {
-            List<FinRecord> list = finRecordService.findListBeginToEnd(finRecord);
+            List<FinRecord> list = finRecordService.finListByEntity(entityParams);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinRecord entity : list) {
                 Map<String, Object> map = getFinItemMap(entity);
@@ -204,6 +220,11 @@ public class InfcFinRecordController extends BaseController {
         return r;
     }
 
+    /**
+     * 将对象映射简化后的列表元素（Item)对象
+     * @param entity
+     * @return
+     */
     private Map<String, Object> getFinItemMap(FinRecord entity) {
         Map<String,Object> map = Maps.newHashMap();
         map.put("id",entity.getId());

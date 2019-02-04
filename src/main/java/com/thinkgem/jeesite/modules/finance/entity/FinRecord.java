@@ -17,6 +17,7 @@ import java.util.Date;
 public class FinRecord extends DataEntity<FinRecord> {
 	
 	private static final long serialVersionUID = 1L;
+
 	private String reType;		// 记录类型：
 	private String busType;		// 交易类型：
 	private String amount;		// 交易金额
@@ -24,6 +25,7 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private String inId;		// 收入账户
 	private String outId;		// 支出账户
 	private Date noteDate;		// 记录时间
+
 	private String dateStr; // 客户端发过来的日期字符串
 	private String startDate;
 	private String endDate;
@@ -32,6 +34,26 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private String day;
 	private Double inAmount;
 	private Double outAmount;
+	private String acId;
+	private String acName;
+
+	public String getAcName() {
+		return acName;
+	}
+
+	public void setAcName(String acName) {
+		this.acName = acName;
+	}
+
+	public String getAcId() {
+		return acId;
+	}
+
+	public void setAcId(String acId) {
+		this.acId = acId;
+	}
+
+
 
 	public Double getInAmount() {
 		return inAmount;
@@ -49,9 +71,9 @@ public class FinRecord extends DataEntity<FinRecord> {
 		this.outAmount = outAmount;
 	}
 
-	public void setYMD(String dataStr) {
-		this.setDateStr(dataStr);
-		String[] split = dataStr.split("-");
+	public void setYMD() {
+
+		String[] split = dateStr.split("-");
 		int cnt = split.length;
 		switch (cnt) {
 			case 1:
@@ -98,6 +120,7 @@ public class FinRecord extends DataEntity<FinRecord> {
 
 	public void setDateStr(String dateStr) {
 		this.dateStr = dateStr;
+		setYMD();
 	}
 
 	public String getStartDate() {

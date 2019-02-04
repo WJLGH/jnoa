@@ -124,42 +124,53 @@
 
 	</select>
 	<select id="getDateSumList" resultType="FinRecord" >
-		<choose>
-			<when test="year != null and month != null and day != null" >
-				select
-				<include refid="finRecordSumColumns" />
-				from fin_record
-				where DATE_FORMAT(note_date,'%Y-%m-%d')  = #{dateStr}
-			</when>
-			<when test="year != null and month != null">
-				SELECT
-				<include refid="finRecordSumColumns" />
-				FROM fin_record
-				WHERE DATE_FORMAT(note_date,'%Y-%m')  = #{dateStr}
-				GROUP BY `day`
-			</when>
-			<when test="year != null">
-				SELECT
-				<include refid="finRecordSumColumns" />
-				FROM fin_record
-				WHERE DATE_FORMAT(note_date,'%Y')  =#{dateStr}
-				GROUP BY  `month`
-			</when>
-			<otherwise>
-				SELECT
-				<include refid="finRecordSumColumns" />
-				FROM fin_record
-				WHERE DATE_FORMAT(note_date,'%Y')  = DATE_FORMAT(now(),'%Y')
-				GROUP BY `month`
-			</otherwise>
-		</choose>
+		select
+		<include refid="finRecordSumColumns" />
+		from fin_record
+		where
+			<choose>
+				<when test="year != null and month != null and day != null" >
+					DATE_FORMAT(note_date,'%Y-%m-%d')  = #{dateStr}
+				</when>
+				<when test="year != null and month != null">
+					DATE_FORMAT(note_date,'%Y-%m')  = #{dateStr}
+					GROUP BY `day`
+				</when>
+				<when test="year != null">
+					DATE_FORMAT(note_date,'%Y')  =#{dateStr}
+					GROUP BY  `month`
+				</when>
+				<otherwise>
+					DATE_FORMAT(note_date,'%Y')  = DATE_FORMAT(now(),'%Y')
+					GROUP BY `month`
+				</otherwise>
+			</choose>
 		ORDER  by note_date
 	</select>
 
 
 	<select id="findListByAccount" resultType="FinRecord">
 		SELECT
-		<include refid="finRecordColumns"/>
+		a.id AS "id",
+		<if test="id != null and id != ''">
+			CASE
+			WHEN a.in_id = #{id} THEN "收入"
+			WHEN a.out_id = #{id} THEN "支出"
+			ELSE "" END
+		</if>
+		<if test="acName != null and acName != ''">
+			CASE
+			WHEN a.in_id = #{acName} THEN "收入"
+			WHEN a.out_id = #{acName} THEN "支出"
+			ELSE "" END
+		</if>
+		AS "reType",
+		a.bus_type AS "busType",
+		a.amount AS "amount",
+		a.description AS "description",
+		a.in_id AS "inId",
+		a.out_id AS "outId",
+		a.note_date AS "noteDate"
 		FROM fin_record a
 		<include refid="finRecordJoins"/>
 		<where>
@@ -172,6 +183,51 @@
 		</where>
 	</select>
 
+	<select id="finListByEntity" resultType="FinRecord">
+		SELECT
+		<include refid="finRecordColumns"/>
+		FROM fin_record a
+		<include refid="finRecordJoins"/>
+		<where>
+			<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+				and DATE_FORMAT(note_date,'%Y-%m-%d')    BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="busType != null and busType != '' ">
+				and a.bus_type = #{busType}
+			</if>
+			<if test="dateStr != null and dateStr != ''">
+				and
+				<choose>
+					<when test="year != null and month != null and day != null" >
+						DATE_FORMAT(note_date,'%Y-%m-%d')  = #{dateStr}
+					</when>
+					<when test="year != null and month != null">
+						DATE_FORMAT(note_date,'%Y-%m')  = #{dateStr}
+					</when>
+					<when test="year != null">
+						DATE_FORMAT(note_date,'%Y')  =#{dateStr}
+					</when>
+					<otherwise>
+						DATE_FORMAT(note_date,'%Y-%m-%d')  = DATE_FORMAT(now(),'%Y-%m-%d')
+					</otherwise>
+				</choose>
+			</if>
+			<if test="id != null and id != ''">
+				and a.in_id = #{id} or a.out_id = #{id}
+			</if>
+			<if test="acName != null and acName != ''">
+				and a.in_id = #{acName} or a.out_id = #{acName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER  BY note_date DESC
+			</otherwise>
+		</choose>
+	</select>
 	<select id="findListBeginToEnd" resultType="FinRecord">
 		SELECT
 		<include refid="finRecordColumns"/>

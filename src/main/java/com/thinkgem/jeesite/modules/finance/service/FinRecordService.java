@@ -67,4 +67,19 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
     public FinRecord getReTypeSum(FinRecord finRecord) {
 		return finRecordDao.getReTypeSum(finRecord);
     }
+
+	public List<FinRecord> finListByEntity(FinRecord entityParams) {
+		List<FinRecord> list = null;
+		String acId = entityParams.getAcId();
+		String acName = entityParams.getAcName();
+		if(acId != null || acName!=null) {
+			FinAccount finAccount = new FinAccount();
+			finAccount.setId(acId);
+			finAccount.setAcName(acName);
+			list = finRecordDao.findListByAccount(finAccount);
+		} else {
+			list = finRecordDao.finListByEntity(entityParams);
+		}
+		return list;
+	}
 }
