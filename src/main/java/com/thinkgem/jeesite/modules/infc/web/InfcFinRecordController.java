@@ -1,22 +1,18 @@
 package com.thinkgem.jeesite.modules.infc.web;
 
 import com.google.common.collect.Maps;
-import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.finance.entity.FinRecord;
 import com.thinkgem.jeesite.modules.finance.service.FinRecordService;
 import com.thinkgem.jeesite.modules.infc.entity.DataStatus;
 import com.thinkgem.jeesite.modules.infc.entity.DataStatusList;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,18 +32,6 @@ public class InfcFinRecordController extends BaseController {
 
     @Autowired
     private FinRecordService finRecordService;
-
-//    @ModelAttribute
-//    public FinRecord get(@RequestParam(required=false) String id) {
-//        FinRecord entity = null;
-//        if (StringUtils.isNotBlank(id)){
-//            entity = finRecordService.get(id);
-//        }
-//        if (entity == null){
-//            entity = new FinRecord();
-//        }
-//        return entity;
-//    }
 
     /**
      * 一条明细的具体信息
@@ -102,24 +86,22 @@ public class InfcFinRecordController extends BaseController {
      * @date 2019/2/3 23:50
      */
     @ResponseBody
-    @RequestMapping(value = "listSumMonth",method = RequestMethod.GET)
-    public String listSumMonth(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "listSumDate",method = RequestMethod.GET)
+    public String listSumDate(HttpServletRequest request, HttpServletResponse response) {
         String dateStr = request.getParameter("dateStr");
         FinRecord finRecord = new FinRecord();
         finRecord.setYMD(dateStr);
         DataStatusList status = new DataStatusList();
         try {
+            FinRecord dateSum = finRecordService.getDateSum(finRecord);
+            Map<String, Object> mainData = getFinSumMap(dateSum);
             List<FinRecord> list = finRecordService.getDateSumList(finRecord);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinRecord entity : list) {
-                Map<String,Object> map = Maps.newHashMap();
-                map.put("year",entity.getYear());
-                map.put("month",entity.getMonth());
-                map.put("day",entity.getDay());
-                map.put("inAmount",entity.getInAmount());
-                map.put("outAmount",entity.getOutAmount());
+                Map<String, Object> map = getFinSumMap(entity);
                 result.add(map);
             }
+            status.setMainData(mainData);
             status.setData(result);
             status.setSuccess("true");
             status.setStatusMessage("ok");
@@ -130,6 +112,18 @@ public class InfcFinRecordController extends BaseController {
         }
         String r = this.renderString(response,status);
         return r;
+    }
+
+    private Map<String, Object> getFinSumMap(FinRecord dateSum) {
+        Map<String,Object> mainData = Maps.newHashMap();
+        mainData.put("dateStr",dateSum.getDateStr());
+        mainData.put("year",dateSum.getYear());
+        mainData.put("month",dateSum.getMonth());
+        mainData.put("day",dateSum.getDay());
+        mainData.put("inAmount",dateSum.getInAmount());
+        mainData.put("outAmount",dateSum.getOutAmount());
+        mainData.put("amount",dateSum.getAmount());
+        return mainData;
     }
 
     /**
@@ -146,14 +140,15 @@ public class InfcFinRecordController extends BaseController {
         finRecord.setReType(reType);
         DataStatusList status = new DataStatusList();
         try {
+            FinRecord reTypeSum =  finRecordService.getReTypeSum(finRecord);
+            Map<String,Object> mainData = getFinBusTypeMap(reTypeSum);
             List<FinRecord> list = finRecordService.getBusTypsList(finRecord);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinRecord entity : list) {
-                Map<String,Object> map = Maps.newHashMap();
-                map.put("busType",entity.getBusType());
-                map.put("amount",entity.getAmount());
+                Map<String, Object> map = getFinBusTypeMap(entity);
                 result.add(map);
             }
+            status.setMainData(mainData);
             status.setData(result);
             status.setSuccess("true");
             status.setStatusMessage("ok");
@@ -164,6 +159,14 @@ public class InfcFinRecordController extends BaseController {
         }
         String r = this.renderString(response,status);
         return r;
+    }
+
+    private Map<String, Object> getFinBusTypeMap(FinRecord entity) {
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("reType",entity.getReType());
+        map.put("busType",entity.getBusType());
+        map.put("amount",entity.getAmount());
+        return map;
     }
 
     /**
@@ -186,12 +189,7 @@ public class InfcFinRecordController extends BaseController {
             List<FinRecord> list = finRecordService.findListBeginToEnd(finRecord);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinRecord entity : list) {
-                Map<String,Object> map = Maps.newHashMap();
-                map.put("id",entity.getId());
-                map.put("amount",entity.getAmount());
-                map.put("reType",entity.getReType());
-                map.put("noteDate",new SimpleDateFormat("yyyy-MM-dd").format(entity.getNoteDate()));
-                map.put("description",entity.getDescription());
+                Map<String, Object> map = getFinItemMap(entity);
                 result.add(map);
             }
             status.setData(result);
@@ -204,6 +202,16 @@ public class InfcFinRecordController extends BaseController {
         }
         String r = this.renderString(response,status);
         return r;
+    }
+
+    private Map<String, Object> getFinItemMap(FinRecord entity) {
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("id",entity.getId());
+        map.put("amount",entity.getAmount());
+        map.put("reType",entity.getReType());
+        map.put("noteDate",new SimpleDateFormat("yyyy-MM-dd").format(entity.getNoteDate()));
+        map.put("description",entity.getDescription());
+        return map;
     }
     //请求方法为post,返回数据为json格式
     // produces属性可以设置返回数据的类型以及编码 这样就可以替代 RequestBody
@@ -232,32 +240,6 @@ public class InfcFinRecordController extends BaseController {
         }
         String r = this.renderString(response,status);
         return r;
-    }
-
-    @RequiresPermissions("finance:finRecord:view")
-    @RequestMapping(value = "form")
-    public String form(FinRecord finRecord, Model model) {
-        model.addAttribute("finRecord", finRecord);
-        return "modules/finance/finRecordForm";
-    }
-
-    @RequiresPermissions("finance:finRecord:edit")
-    @RequestMapping(value = "save")
-    public String save(FinRecord finRecord, Model model, RedirectAttributes redirectAttributes) {
-        if (!beanValidator(model, finRecord)){
-            return form(finRecord, model);
-        }
-        finRecordService.save(finRecord);
-        addMessage(redirectAttributes, "保存明细记录成功");
-        return "redirect:"+Global.getAdminPath()+"/finance/finRecord/?repage";
-    }
-
-    @RequiresPermissions("finance:finRecord:edit")
-    @RequestMapping(value = "delete")
-    public String delete(FinRecord finRecord, RedirectAttributes redirectAttributes) {
-        finRecordService.delete(finRecord);
-        addMessage(redirectAttributes, "删除明细记录成功");
-        return "redirect:"+Global.getAdminPath()+"/finance/finRecord/?repage";
     }
 
 }

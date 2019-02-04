@@ -26,4 +26,8 @@ public interface FinRecordDao extends CrudDao<FinRecord> {
     List<FinRecord> getBusTypsList(FinRecord finRecord);
 
     List<FinRecord> getDateSumList(FinRecord finRecord);
+
+    FinRecord getDateSum(FinRecord finRecord);
+
+    FinRecord getReTypeSum(FinRecord finRecord);
 }

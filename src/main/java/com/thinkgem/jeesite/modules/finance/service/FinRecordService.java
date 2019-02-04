@@ -60,4 +60,11 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 	public List<FinRecord> getDateSumList(FinRecord finRecord) {
 		return finRecordDao.getDateSumList(finRecord);
 	}
+	public FinRecord getDateSum(FinRecord finRecord) {
+		return finRecordDao.getDateSum(finRecord);
+	}
+
+    public FinRecord getReTypeSum(FinRecord finRecord) {
+		return finRecordDao.getReTypeSum(finRecord);
+    }
 }
