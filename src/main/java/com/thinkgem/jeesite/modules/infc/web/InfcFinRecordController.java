@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +132,7 @@ public class InfcFinRecordController extends BaseController {
      * @return
      */
     private Map<String, Object> getFinSumMap(FinRecord dateSum) {
-        Map<String,Object> mainData = Maps.newHashMap();
+        Map<String,Object> mainData = new LinkedHashMap<String, Object>();
         mainData.put("dateStr",dateSum.getDateStr());
         mainData.put("year",dateSum.getYear());
         mainData.put("month",dateSum.getMonth());

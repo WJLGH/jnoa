@@ -125,7 +125,20 @@
 	</select>
 	<select id="getDateSumList" resultType="FinRecord" >
 		select
-		<include refid="finRecordSumColumns" />
+		<choose>
+			<when test="year != null and month != null">
+				DATE_FORMAT(note_date,'%Y-%m-%d')
+			</when>
+			<when test="year != null">
+				DATE_FORMAT(note_date,'%Y-%m')
+			</when>
+		</choose>   `dateStr` ,
+		DATE_FORMAT(note_date,'%Y') `year`,
+		DATE_FORMAT(note_date,'%Y-%m') `month`,
+		DATE_FORMAT(note_date,'%Y-%m-%d') `day`,
+		SUM( CASE WHEN amount &gt;= 0 THEN amount ELSE 0 END) `in_amount`,
+		SUM( CASE WHEN amount  &lt;= 0 THEN amount ELSE 0 END) `out_amount` ,
+		SUM( amount )  `amount`
 		from fin_record
 		where
 			<choose>
