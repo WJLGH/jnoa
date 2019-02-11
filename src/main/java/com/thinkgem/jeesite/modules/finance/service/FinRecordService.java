@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.modules.finance.service;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.modules.account.entity.FinAccount;
+import com.thinkgem.jeesite.modules.account.service.FinAccountService;
 import com.thinkgem.jeesite.modules.finance.dao.FinRecordDao;
 import com.thinkgem.jeesite.modules.finance.entity.FinRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 
 	@Autowired
 	FinRecordDao finRecordDao;
+	@Autowired
+	FinAccountService finAccountService;
 	public FinRecord get(String id) {
 		return super.get(id);
 	}
@@ -49,7 +52,24 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 	
 	@Transactional(readOnly = false)
 	public void save(FinRecord finRecord) {
+		if(finRecord == null) {
+			return ;
+		}
+
+		//添加一条记录
 		super.save(finRecord);
+
+		//完成账户的剩余金额的修改
+		String inId = finRecord.getInId();
+		String outId = finRecord.getOutId();
+		//记录金额的绝对值
+		Double amount = Math.abs(Double.parseDouble(finRecord.getAmount()));
+		if(inId != null && !"".equals(inId)) {
+			finAccountService.updateAmountById(inId,amount,1);
+		}
+		if(outId != null && !"".equals(outId)) {
+			finAccountService.updateAmountById(outId,amount,-1);
+		}
 	}
 	
 	@Transactional(readOnly = false)
