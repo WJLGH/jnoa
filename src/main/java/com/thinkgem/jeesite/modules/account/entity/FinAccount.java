@@ -28,7 +28,12 @@ public class FinAccount extends DataEntity<FinAccount> {
 		super(id);
 	}
 
-	@Length(min=0, max=30, message="类型：长度必须介于 0 和 30 之间")
+    public FinAccount(String acId, Double amount) {
+		this.id = acId;
+		this.amount = amount.toString();
+    }
+
+    @Length(min=0, max=30, message="类型：长度必须介于 0 和 30 之间")
 	public String getAcType() {
 		return acType;
 	}

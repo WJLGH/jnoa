@@ -94,6 +94,12 @@
 			amount = #{amount}
 		WHERE id = #{id}
 	</update>
+
+	<update id="updateAmountById">
+		update fin_account set
+		amount = amount + #{amount}
+		where id = #{id}
+	</update>
 	
 	<update id="delete">
 		DELETE FROM fin_account

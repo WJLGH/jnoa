@@ -14,5 +14,9 @@ import com.thinkgem.jeesite.modules.account.entity.FinAccount;
  */
 @MyBatisDao
 public interface FinAccountDao extends CrudDao<FinAccount> {
-	
+
+    /** 根据账户的id修改账户的剩余金额
+     * @param finAccount
+     */
+    void updateAmountById(FinAccount finAccount);
 }
