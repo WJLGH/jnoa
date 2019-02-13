@@ -10,7 +10,8 @@
 		a.description AS "description",
 		a.in_id AS "inId",
 		a.out_id AS "outId",
-		a.note_date AS "noteDate"
+		a.note_date AS "noteDate",
+		a.dept AS "dept"
 	</sql>
 	<sql id="finRecordSumColumns" >
 		#{dateStr}  `dateStr` ,
@@ -29,13 +30,24 @@
 	<sql id="finRecordJoins">
 	</sql>
     
-	<select id="get" resultType="FinRecord">
-		SELECT 
-			<include refid="finRecordColumns"/>
+	<select id="findSingle" resultType="FinRecord">
+		SELECT
+		a.id AS "id",
+		a.re_type AS "reType",
+		a.bus_type AS "busType",
+		a.amount AS "amount",
+		a.description AS "description",
+		inc.ac_name AS "inId",
+		outc.ac_name AS "outId" ,
+		a.note_date AS "noteDate",
+		a.dept AS "dept"
 		FROM fin_record a
-		<include refid="finRecordJoins"/>
+			LEFT JOIN fin_account inc ON inc.id =  a.`in_id`
+			LEFT JOIN fin_account outc ON outc.id = a.`out_id`
 		WHERE a.id = #{id}
+
 	</select>
+
 
 	<select id="findList" resultType="FinRecord">
 		SELECT 
@@ -183,7 +195,8 @@
 		a.description AS "description",
 		a.in_id AS "inId",
 		a.out_id AS "outId",
-		a.note_date AS "noteDate"
+		a.note_date AS "noteDate",
+		a.dept AS "dept"
 		FROM fin_record a
 		<include refid="finRecordJoins"/>
 		<where>
@@ -286,7 +299,8 @@
 			description,
 			in_id,
 			out_id,
-			note_date
+			note_date,
+			dept
 		) VALUES (
 			#{id},
 			#{reType},
@@ -295,7 +309,8 @@
 			#{description},
 			#{inId},
 			#{outId},
-			#{noteDate}
+			#{noteDate},
+			#{dept}
 		)
 	</insert>
 	

@@ -25,6 +25,9 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private String inId;		// 收入账户
 	private String outId;		// 支出账户
 	private Date noteDate;		// 记录时间
+	private String dept; //部门
+
+
 
 	private String dateStr; // 客户端发过来的日期字符串
 	private String startDate;
@@ -53,7 +56,13 @@ public class FinRecord extends DataEntity<FinRecord> {
 		this.acId = acId;
 	}
 
+	public String getDept() {
+		return dept;
+	}
 
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
 
 	public Double getInAmount() {
 		return inAmount;

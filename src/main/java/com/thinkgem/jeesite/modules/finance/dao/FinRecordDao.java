@@ -32,4 +32,6 @@ public interface FinRecordDao extends CrudDao<FinRecord> {
     FinRecord getReTypeSum(FinRecord finRecord);
 
     List<FinRecord> finListByEntity(FinRecord entityParams);
+
+    FinRecord findSingle(FinRecord finRecord);
 }

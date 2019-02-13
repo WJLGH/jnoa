@@ -35,21 +35,38 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 	public List<FinRecord> findList(FinRecord finRecord) {
 		return super.findList(finRecord);
 	}
-
+	/**
+	 * 获取账户的收支记录列表
+	 * @author wjl
+	 * @date 2019/2/13 9:57
+	 */
 	public List<FinRecord> findListByAccount(FinAccount finAccount) {
 		return finRecordDao.findListByAccount(finAccount);
 	}
+	/**
+	 * 获取交易类型的汇总信息列表
+	 * @author wjl
+	 * @date 2019/2/13 9:57
+	 */
 	public List<FinRecord> getBusTypsList(FinRecord finRecord) {
 		 return finRecordDao.getBusTypsList(finRecord);
 	}
-
+	/**
+	 * 获取一个时间段之内的记录列表
+	 * @author wjl
+	 * @date 2019/2/13 9:58
+	 */
 	public List<FinRecord> findListBeginToEnd(FinRecord finRecord) {
 		return finRecordDao.findListBeginToEnd(finRecord);
 	}
 	public Page<FinRecord> findPage(Page<FinRecord> page, FinRecord finRecord) {
 		return super.findPage(page, finRecord);
 	}
-	
+	/**
+	 * 添加一条记录信息 并且相应的修改账户的剩余金额
+	 * @author wjl
+	 * @date 2019/2/13 9:55
+	 */
 	@Transactional(readOnly = false)
 	public void save(FinRecord finRecord) {
 		if(finRecord == null) {
@@ -76,18 +93,35 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 	public void delete(FinRecord finRecord) {
 		super.delete(finRecord);
 	}
-
+	/**
+	 * 获取 记录时间的汇总信息列表
+	 * @author wjl
+	 * @date 2019/2/13 9:54
+	 */
 	public List<FinRecord> getDateSumList(FinRecord finRecord) {
 		return finRecordDao.getDateSumList(finRecord);
 	}
+	/**
+	 * 获取记录时间的汇总信息
+	 * @author wjl
+	 * @date 2019/2/13 9:54
+	 */
 	public FinRecord getDateSum(FinRecord finRecord) {
 		return finRecordDao.getDateSum(finRecord);
 	}
-
+	/**
+	 * 获取  记录类型的汇总信息
+	 * @author wjl
+	 * @date 2019/2/13 9:53
+	 */
     public FinRecord getReTypeSum(FinRecord finRecord) {
 		return finRecordDao.getReTypeSum(finRecord);
     }
-
+	/**
+	 * 根据多个查询条件获取列表
+	 * @author wjl
+	 * @date 2019/2/13 9:52
+	 */
 	public List<FinRecord> finListByEntity(FinRecord entityParams) {
 		List<FinRecord> list = null;
 		String acId = entityParams.getAcId();
@@ -101,5 +135,13 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 			list = finRecordDao.finListByEntity(entityParams);
 		}
 		return list;
+	}
+	/**
+	 * 查询一条记录的具体信息
+	 * @author wjl
+	 * @date 2019/2/13 9:52
+	 */
+	public FinRecord getSingle(FinRecord finRecord) {
+		return finRecordDao.findSingle(finRecord);
 	}
 }

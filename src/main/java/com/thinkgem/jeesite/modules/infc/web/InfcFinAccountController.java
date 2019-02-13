@@ -38,6 +38,11 @@ public class InfcFinAccountController extends BaseController {
     @Autowired
     private FinRecordService finRecordService;
 
+    /**
+     * 返回该账户下的所有记录信息列表
+     * @author wjl
+     * @date 2019/2/13 9:51
+     */
     @ResponseBody
     @RequestMapping(value = "listFinRecord",method = RequestMethod.GET)
     public String listFinRecord(HttpServletRequest request, HttpServletResponse response) {
@@ -63,6 +68,68 @@ public class InfcFinAccountController extends BaseController {
             status.setSuccess("true");
             status.setStatusMessage("ok");
         } catch (Exception e) {
+            e.printStackTrace();
+            status.setSuccess("false");
+            status.setStatusMessage(e.getMessage());
+        }
+        String r = this.renderString(response,status);
+        return r;
+    }
+    /**
+     * 账户列表，返回所有的账户id和名称
+     * @author wjl
+     * @date 2019/2/13 9:50
+     */
+    @ResponseBody
+    @RequestMapping(value = "allAccount",method = RequestMethod.GET)
+    public String allAccount(HttpServletRequest request, HttpServletResponse response) {
+        DataStatusList status = new DataStatusList();
+        try  {
+            List<FinAccount> list = finAccountService.findAllAccount();
+            List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
+            for(FinAccount  entity : list) {
+                Map<String,Object> map = Maps.newHashMap();
+                map.put("id",entity.getId()) ;
+                map.put("acName",entity.getAcName());
+                result.add(map);
+            }
+            status.setData(result);
+            status.setSuccess("true");
+            status.setStatusMessage("ok");
+        }catch (Exception e) {
+            e.printStackTrace();
+            status.setSuccess("false");
+            status.setStatusMessage(e.getMessage());
+        }
+        String r = this.renderString(response,status);
+        return r;
+    }
+
+    /**
+     * 按账户汇总信息列表
+     * @author wjl
+     * @date 2019/2/13 20:41
+     */
+    @ResponseBody
+    @RequestMapping(value = "listSumAccount",method = RequestMethod.GET)
+    public String listSumAccount(FinAccount finAccount,HttpServletRequest request,HttpServletResponse response) {
+        DataStatusList status = new DataStatusList();
+        try  {
+            List<FinAccount> list = finAccountService.getAccountSum(finAccount);
+            List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
+            for(FinAccount  entity : list) {
+                Map<String,Object> map = Maps.newHashMap();
+                map.put("id",entity.getId()) ;
+                map.put("acName",entity.getAcName());
+                map.put("inAmount",String.format("%.2f",entity.getInAmount()));
+                map.put("outAmount",String.format("%.2f",entity.getOutAmount()));
+                map.put("amount",entity.getAmount());
+                result.add(map);
+            }
+            status.setData(result);
+            status.setSuccess("true");
+            status.setStatusMessage("ok");
+        }catch (Exception e) {
             e.printStackTrace();
             status.setSuccess("false");
             status.setStatusMessage(e.getMessage());

@@ -19,6 +19,8 @@ public class FinAccount extends DataEntity<FinAccount> {
 	private String cardNum;		// 卡号
 	private String acName;		// 名称
 	private String amount;		// 剩余金额
+	private Double inAmount;	//收入金额
+	private Double outAmount;	//支出金额
 	
 	public FinAccount() {
 		super();
@@ -33,7 +35,23 @@ public class FinAccount extends DataEntity<FinAccount> {
 		this.amount = amount.toString();
     }
 
-    @Length(min=0, max=30, message="类型：长度必须介于 0 和 30 之间")
+	public Double getInAmount() {
+		return inAmount;
+	}
+
+	public void setInAmount(Double inAmount) {
+		this.inAmount = inAmount;
+	}
+
+	public Double getOutAmount() {
+		return outAmount;
+	}
+
+	public void setOutAmount(Double outAmount) {
+		this.outAmount = outAmount;
+	}
+
+	@Length(min=0, max=30, message="类型：长度必须介于 0 和 30 之间")
 	public String getAcType() {
 		return acType;
 	}

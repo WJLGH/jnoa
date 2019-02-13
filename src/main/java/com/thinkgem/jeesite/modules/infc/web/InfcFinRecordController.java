@@ -42,11 +42,11 @@ public class InfcFinRecordController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "detailFinRecord",method = RequestMethod.GET)
-    public String detailFinRecord(HttpServletRequest request, HttpServletResponse response) {
+    public String detailFinRecord(FinRecord finRecord,HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
         FinRecord entity = null;
         if (StringUtils.isNotBlank(id)){
-            entity = finRecordService.get(id);
+            entity = finRecordService.getSingle(finRecord);
         }
         if (entity == null){
             entity = new FinRecord();
@@ -85,6 +85,7 @@ public class InfcFinRecordController extends BaseController {
         map.put("description",entity.getDescription());
         map.put("inId",entity.getInId());
         map.put("outId",entity.getOutId());
+        map.put("dept",entity.getDept());
         return map;
     }
 

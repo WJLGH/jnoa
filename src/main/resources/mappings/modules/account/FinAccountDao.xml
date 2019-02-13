@@ -69,7 +69,52 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
+	<select id="getAccountSum"  resultType="FinAccount">
+		SELECT
+		* ,
+		(ret.inAmount - ret.outAmount ) AS amount
+		FROM
+		(
+			SELECT
+			a.`id`,
+			a.`ac_name`,
+			SUM( CASE WHEN r.`in_id` = a.`id` THEN ABS(r.`amount`)
+			ELSE 0.0 END ) AS inAmount,
+			SUM( CASE WHEN r.`out_id` = a.`id` THEN ABS(r.`amount`)
+			ELSE 0.0 END ) AS outAmount
+			FROM fin_account a
+			LEFT JOIN fin_record r
+			ON (a.id = r.`in_id` OR a.`id` = r.`out_id`)
+			<where>
+				<if test="id != null and  id != ''">
+					a.id = #{id}
+				</if>
+			</where>
+			GROUP BY a.`id`
+		)
+		AS ret
+		ORDER BY ac_name
+
+	</select>
+	<select id="findAllAccount" resultType="FinAccount">
+		SELECT
+			a.id as "id",
+			a.ac_name as "acName"
+		FROM fin_account a
+		<include refid="finAccountJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
 	<insert id="insert">
 		INSERT INTO fin_account(
 			id,

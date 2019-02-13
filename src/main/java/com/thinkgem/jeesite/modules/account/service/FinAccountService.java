@@ -35,7 +35,14 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
 	public Page<FinAccount> findPage(Page<FinAccount> page, FinAccount finAccount) {
 		return super.findPage(page, finAccount);
 	}
-	
+	/**
+	 * 获取账户列表
+	 * @author wjl
+	 * @date 2019/2/13 10:00
+	 */
+	public List<FinAccount> findAllAccount() {
+		return finAccountDao.findAllAccount();
+	}
 	@Transactional(readOnly = false)
 	public void save(FinAccount finAccount) {
 		super.save(finAccount);
@@ -61,5 +68,9 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
     public void updateAmountById(String acId, Double amount, int flag) {
     	FinAccount finAccount = new FinAccount(acId,amount*flag);
     	finAccountDao.updateAmountById(finAccount);
+    }
+
+    public List<FinAccount> getAccountSum(FinAccount finAccount) {
+		return finAccountDao.getAccountSum(finAccount);
     }
 }
