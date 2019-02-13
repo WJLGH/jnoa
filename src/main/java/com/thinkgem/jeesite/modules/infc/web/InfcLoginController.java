@@ -28,7 +28,7 @@ import java.util.Map;
 //跨域，指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的
 @CrossOrigin
 @Controller
-@RequestMapping(value = "${adminPath}//infclogin")   //请求映射地址
+@RequestMapping(value = "${adminPath}/infc/infclogin")   //请求映射地址
 public class InfcLoginController extends BaseController {
 
     @Autowired
