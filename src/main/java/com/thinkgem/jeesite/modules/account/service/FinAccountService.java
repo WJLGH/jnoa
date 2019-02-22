@@ -73,4 +73,7 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
     public List<FinAccount> getAccountSum(FinAccount finAccount) {
 		return finAccountDao.getAccountSum(finAccount);
     }
+	public FinAccount getDeptSum(FinAccount finAccount) {
+		return finAccountDao.getDeptSum(finAccount);
+	}
 }

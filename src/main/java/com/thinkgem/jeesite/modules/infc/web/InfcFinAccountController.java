@@ -116,6 +116,11 @@ public class InfcFinAccountController extends BaseController {
         DataStatusList status = new DataStatusList();
         try  {
             List<FinAccount> list = finAccountService.getAccountSum(finAccount);
+            FinAccount deptSum = finAccountService.getDeptSum(finAccount);
+            Map<String,Object> mainMap = Maps.newHashMap();
+            mainMap.put("dept",deptSum.getDept());
+            mainMap.put("amount",deptSum.getAmount());
+            status.setMainData(mainMap);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinAccount  entity : list) {
                 Map<String,Object> map = Maps.newHashMap();
@@ -134,7 +139,7 @@ public class InfcFinAccountController extends BaseController {
             status.setSuccess("false");
             status.setStatusMessage(e.getMessage());
         }
-        String r = this.renderString(response,status);
-        return r;
+        return this.renderString(response,status);
+        /*return r;*/
     }
 }

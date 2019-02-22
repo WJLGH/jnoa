@@ -21,7 +21,16 @@ public class FinAccount extends DataEntity<FinAccount> {
 	private String amount;		// 剩余金额
 	private Double inAmount;	//收入金额
 	private Double outAmount;	//支出金额
-	
+	private String dept;
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
 	public FinAccount() {
 		super();
 	}

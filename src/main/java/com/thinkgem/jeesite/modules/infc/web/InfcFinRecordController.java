@@ -138,9 +138,9 @@ public class InfcFinRecordController extends BaseController {
         mainData.put("year",dateSum.getYear());
         mainData.put("month",dateSum.getMonth());
         mainData.put("day",dateSum.getDay());
-        mainData.put("inAmount",dateSum.getInAmount());
-        mainData.put("outAmount",dateSum.getOutAmount());
-        mainData.put("amount",dateSum.getAmount());
+        mainData.put("inAmount",dateSum.getInAmount()!=null?dateSum.getInAmount():0);
+        mainData.put("outAmount",dateSum.getOutAmount()!=null?dateSum.getOutAmount():0);
+        mainData.put("amount",dateSum.getAmount()!= null?dateSum.getAmount():0 );
         return mainData;
     }
 
@@ -158,8 +158,8 @@ public class InfcFinRecordController extends BaseController {
         finRecord.setReType(reType);
         DataStatusList status = new DataStatusList();
         try {
-            FinRecord reTypeSum =  finRecordService.getReTypeSum(finRecord);
-            Map<String,Object> mainData = getFinBusTypeMap(reTypeSum);
+            FinRecord reTypeSum =  finRecordService.getAllInAndOut(finRecord);
+            Map<String,Object> mainData = getMainSumMap(reTypeSum);
             List<FinRecord> list = finRecordService.getBusTypsList(finRecord);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinRecord entity : list) {
@@ -177,6 +177,14 @@ public class InfcFinRecordController extends BaseController {
         }
         String r = this.renderString(response,status);
         return r;
+    }
+
+    private Map<String,Object> getMainSumMap(FinRecord entity) {
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("dept",entity.getDept());
+        map.put("inAmount",entity.getInAmount());
+        map.put("outAmount",entity.getOutAmount());
+        return map;
     }
 
     /**

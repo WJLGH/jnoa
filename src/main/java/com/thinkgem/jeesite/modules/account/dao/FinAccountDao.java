@@ -29,4 +29,5 @@ public interface FinAccountDao extends CrudDao<FinAccount> {
     List<FinAccount> findAllAccount();
 
     List<FinAccount> getAccountSum(FinAccount finAccount);
+    FinAccount getDeptSum(FinAccount finAccount);
 }

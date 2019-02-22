@@ -7,7 +7,8 @@
 		a.ac_type AS "acType",
 		a.card_num AS "cardNum",
 		a.ac_name AS "acName",
-		a.amount AS "amount"
+		a.amount AS "amount",
+		a.dept as "dept"
 	</sql>
 	
 	<sql id="finAccountJoins">
@@ -20,7 +21,19 @@
 		<include refid="finAccountJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
+	<select id="getDeptSum" resultType="FinAccount">
+		SELECT
+		 	sum(a.amount) as "amount",
+		 	a.dept as "dept"
+		from fin_account a
+		<where>
+			<if test="dept != null and dept != ''">
+				AND a.dept = #{dept}
+			</if>
+		</where>
+	</select>
+
 	<select id="findList" resultType="FinAccount">
 		SELECT 
 			<include refid="finAccountColumns"/>
@@ -43,6 +56,9 @@
 			<if test="amount != null and amount != ''">
 				AND a.amount = #{amount}
 			</if>
+			<if test="dept != null and dept != ''">
+				AND a.dept = #{dept}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -59,7 +75,9 @@
 		FROM fin_account a
 		<include refid="finAccountJoins"/>
 		<where>
-			
+			<if test="dept != null and dept != ''">
+				AND a.dept = #{dept}
+			</if>
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -90,6 +108,9 @@
 				<if test="id != null and  id != ''">
 					a.id = #{id}
 				</if>
+				<if test="dept != null and dept != ''">
+					AND a.dept = #{dept}
+				</if>
 			</where>
 			GROUP BY a.`id`
 		)
@@ -104,7 +125,9 @@
 		FROM fin_account a
 		<include refid="finAccountJoins"/>
 		<where>
-
+			<if test="dept != null and dept != ''">
+				AND a.dept = #{dept}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -121,13 +144,15 @@
 			ac_type,
 			card_num,
 			ac_name,
-			amount
+			amount,
+			dept
 		) VALUES (
 			#{id},
 			#{acType},
 			#{cardNum},
 			#{acName},
-			#{amount}
+			#{amount},
+			#{dept}
 		)
 	</insert>
 	
@@ -136,7 +161,8 @@
 			ac_type = #{acType},
 			card_num = #{cardNum},
 			ac_name = #{acName},
-			amount = #{amount}
+			amount = #{amount},
+			dept = #{dept}
 		WHERE id = #{id}
 	</update>
 

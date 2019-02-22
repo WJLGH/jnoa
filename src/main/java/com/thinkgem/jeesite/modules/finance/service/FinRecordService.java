@@ -114,8 +114,8 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
 	 * @author wjl
 	 * @date 2019/2/13 9:53
 	 */
-    public FinRecord getReTypeSum(FinRecord finRecord) {
-		return finRecordDao.getReTypeSum(finRecord);
+    public FinRecord getAllInAndOut(FinRecord finRecord) {
+		return finRecordDao.getAllInAndOut(finRecord);
     }
 	/**
 	 * 根据多个查询条件获取列表

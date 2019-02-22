@@ -102,6 +102,19 @@
  		  GROUP BY bus_type
 	</select>
 
+	<select id="getAllInAndOut" resultType="FinRecord">
+		SELECT
+		a.dept as "dept",
+		SUM( CASE WHEN a.amount &gt;= 0 THEN amount ELSE 0 END) `in_amount`,
+		SUM( CASE WHEN a.amount  &lt;= 0 THEN amount ELSE 0 END) `out_amount`
+		from fin_record a
+		<where>
+			<if test="dept != null and dept != ''">
+				AND a.dept = #{dept}
+			</if>
+		</where>
+	</select>
+
 	<select id="getReTypeSum"  resultType="FinRecord">
 		SELECT
 		<include refid="finTypeSumColumns"/>
@@ -133,7 +146,7 @@
 				</otherwise>
 			</choose>
 		</where>
-
+		order by note_date DESC
 	</select>
 	<select id="getDateSumList" resultType="FinRecord" >
 		select
@@ -170,7 +183,7 @@
 					GROUP BY `month`
 				</otherwise>
 			</choose>
-		ORDER  by note_date
+		ORDER  by note_date DESC
 	</select>
 
 
