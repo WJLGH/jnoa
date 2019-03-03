@@ -26,6 +26,7 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private String outId;		// 支出账户
 	private Date noteDate;		// 记录时间
 	private String dept; //部门
+	private FinGood finGood;
 
 
 
@@ -39,6 +40,14 @@ public class FinRecord extends DataEntity<FinRecord> {
 	private Double outAmount;
 	private String acId;
 	private String acName;
+
+	public FinGood getFinGood() {
+		return finGood;
+	}
+
+	public void setFinGood(FinGood finGood) {
+		this.finGood = finGood;
+	}
 
 	public String getAcName() {
 		return acName;
@@ -209,7 +218,7 @@ public class FinRecord extends DataEntity<FinRecord> {
 		this.outId = outId;
 	}
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	public Date getNoteDate() {
 		return noteDate;
 	}
