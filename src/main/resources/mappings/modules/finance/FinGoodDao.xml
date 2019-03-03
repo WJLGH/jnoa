@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.finance.dao.FinGoodDao">
+    
+	<sql id="finGoodColumns">
+		a.id AS "id",
+		a.re_id AS "re.id",
+		a.good_name AS "goodName",
+		a.price AS "price",
+		a.quantity AS "quantity",
+		a.unit AS "unit",
+		a.supplier AS "supplier",
+		a.sp_address AS "spAddress",
+		a.buyer AS "buyer"
+	</sql>
+	
+	<sql id="finGoodJoins">
+		LEFT JOIN fin_record b ON b.id = a.re_id
+	</sql>
+    
+	<select id="get" resultType="FinGood">
+		SELECT 
+			<include refid="finGoodColumns"/>
+		FROM fin_good a
+		<include refid="finGoodJoins"/>
+		WHERE a.re_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FinGood">
+		SELECT 
+			<include refid="finGoodColumns"/>
+		FROM fin_good a
+		<include refid="finGoodJoins"/>
+		<where>
+			
+			<if test="re != null and re.id != null and re.id != ''">
+				AND a.re_id = #{re.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FinGood">
+		SELECT 
+			<include refid="finGoodColumns"/>
+		FROM fin_good a
+		<include refid="finGoodJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO fin_good(
+			id,
+			re_id,
+			good_name,
+			price,
+			quantity,
+			unit,
+			supplier,
+			sp_address,
+			buyer
+		) VALUES (
+			#{id},
+			#{re.id},
+			#{goodName},
+			#{price},
+			#{quantity},
+			#{unit},
+			#{supplier},
+			#{spAddress},
+			#{buyer}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE fin_good SET 	
+			re_id = #{re.id},
+			good_name = #{goodName},
+			price = #{price},
+			quantity = #{quantity},
+			unit = #{unit},
+			supplier = #{supplier},
+			sp_address = #{spAddress},
+			buyer = #{buyer}
+		WHERE re_id = #{re.id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM fin_good
+				WHERE re_id = #{re.id}
+	</update>
+	
+</mapper>
