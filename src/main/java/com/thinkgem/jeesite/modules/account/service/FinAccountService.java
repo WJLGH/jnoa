@@ -39,9 +39,10 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
 	 * 获取账户列表
 	 * @author wjl
 	 * @date 2019/2/13 10:00
+	 * @param finAccount
 	 */
-	public List<FinAccount> findAllAccount() {
-		return finAccountDao.findAllAccount();
+	public List<FinAccount> findAllAccount(FinAccount finAccount) {
+		return finAccountDao.findAllAccount(finAccount);
 	}
 	@Transactional(readOnly = false)
 	public void save(FinAccount finAccount) {

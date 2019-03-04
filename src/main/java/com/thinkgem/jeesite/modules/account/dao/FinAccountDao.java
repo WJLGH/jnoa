@@ -26,7 +26,7 @@ public interface FinAccountDao extends CrudDao<FinAccount> {
      * @author wjl
      * @date 2019/2/13 10:00
      */
-    List<FinAccount> findAllAccount();
+    List<FinAccount> findAllAccount(FinAccount finAccount);
 
     List<FinAccount> getAccountSum(FinAccount finAccount);
     FinAccount getDeptSum(FinAccount finAccount);

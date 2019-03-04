@@ -297,11 +297,11 @@ public class InfcFinRecordController extends BaseController {
             isUpdate = true;
         }
         try {
-            finRecordService.save(finRecord);
+            finRecordService.save(finRecord,isUpdate);
             if (finGood != null) {
-
+                FinGood oldfinGood = finGoodDao.findByRecord(finRecord);
                 finGood.setRe(finRecord);
-                if (isUpdate) {
+                if (oldfinGood != null) {
                     finGoodDao.update(finGood);
                 } else {
                     finGoodService.save(finGood);

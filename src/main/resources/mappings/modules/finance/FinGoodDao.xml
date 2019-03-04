@@ -17,9 +17,17 @@
 	<sql id="finGoodJoins">
 		LEFT JOIN fin_record b ON b.id = a.re_id
 	</sql>
-    
+
+	<select id="findByRecord" resultType="FinGood">
+		SELECT
+		<include refid="finGoodColumns"/>
+		FROM fin_good a
+		<include refid="finGoodJoins"/>
+		WHERE a.re_id = #{id}
+	</select>
+
 	<select id="get" resultType="FinGood">
-		SELECT 
+		SELECT
 			<include refid="finGoodColumns"/>
 		FROM fin_good a
 		<include refid="finGoodJoins"/>

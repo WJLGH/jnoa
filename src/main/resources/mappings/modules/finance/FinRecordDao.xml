@@ -29,7 +29,18 @@
 	</sql>
 	<sql id="finRecordJoins">
 	</sql>
-    
+
+	<select id="get" resultType="FinRecord">
+		SELECT
+		<include refid="finRecordColumns"></include>
+		FROM fin_record a
+		<where>
+			<if test="id != null or id != ''">
+				a.id = #{id}
+			</if>
+		</where>
+
+	</select>
 	<select id="findSingle" resultType="FinRecord">
 		SELECT
 		a.id AS "id",

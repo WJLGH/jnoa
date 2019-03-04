@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.modules.finance.dao;
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.finance.entity.FinGood;
+import com.thinkgem.jeesite.modules.finance.entity.FinRecord;
 
 /**
  * 明细记录DAO接口
@@ -14,5 +15,6 @@ import com.thinkgem.jeesite.modules.finance.entity.FinGood;
  */
 @MyBatisDao
 public interface FinGoodDao extends CrudDao<FinGood> {
-	
+
+    FinGood findByRecord(FinRecord finRecord);
 }

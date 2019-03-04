@@ -82,10 +82,10 @@ public class InfcFinAccountController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "allAccount",method = RequestMethod.GET)
-    public String allAccount(HttpServletRequest request, HttpServletResponse response) {
+    public String allAccount(FinAccount finAccount,HttpServletRequest request, HttpServletResponse response) {
         DataStatusList status = new DataStatusList();
         try  {
-            List<FinAccount> list = finAccountService.findAllAccount();
+            List<FinAccount> list = finAccountService.findAllAccount(finAccount);
             List<Map<String,Object>> result = new LinkedList<Map<String, Object>>();
             for(FinAccount  entity : list) {
                 Map<String,Object> map = Maps.newHashMap();

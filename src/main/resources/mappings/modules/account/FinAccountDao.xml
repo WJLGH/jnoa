@@ -168,8 +168,12 @@
 
 	<update id="updateAmountById">
 		update fin_account set
-		amount = amount + #{amount}
-		where id = #{id}
+		amount =  (#{amount} + amount)
+		<where>
+			<if test="id != null and  id != ''">
+				id = #{id} or ac_name = #{id}
+			</if>
+		</where>
 	</update>
 	
 	<update id="delete">
