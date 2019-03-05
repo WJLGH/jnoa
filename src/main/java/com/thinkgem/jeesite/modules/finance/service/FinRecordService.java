@@ -115,8 +115,9 @@ public class FinRecordService extends CrudService<FinRecordDao, FinRecord> {
     }
 
     @Transactional(readOnly = false)
-    public void delete(FinRecord finRecord) {
+    public boolean delete(FinRecord finRecord) {
         super.delete(finRecord);
+        return false;
     }
 
     /**

@@ -38,9 +38,10 @@ public class DictService extends CrudService<DictDao, Dict> {
 	}
 
 	@Transactional(readOnly = false)
-	public void delete(Dict dict) {
+	public boolean delete(Dict dict) {
 		super.delete(dict);
 		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
-	}
+        return false;
+    }
 
 }

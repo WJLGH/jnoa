@@ -33,9 +33,10 @@ public class AreaService extends TreeService<AreaDao, Area> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(Area area) {
+	public boolean delete(Area area) {
 		super.delete(area);
 		UserUtils.removeCache(UserUtils.CACHE_AREA_LIST);
-	}
+        return false;
+    }
 	
 }

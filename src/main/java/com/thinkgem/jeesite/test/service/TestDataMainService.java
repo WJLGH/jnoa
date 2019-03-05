@@ -66,9 +66,10 @@ public class TestDataMainService extends CrudService<TestDataMainDao, TestDataMa
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(TestDataMain testDataMain) {
+	public boolean delete(TestDataMain testDataMain) {
 		super.delete(testDataMain);
 		testDataChildDao.delete(new TestDataChild(testDataMain));
-	}
+        return false;
+    }
 	
 }

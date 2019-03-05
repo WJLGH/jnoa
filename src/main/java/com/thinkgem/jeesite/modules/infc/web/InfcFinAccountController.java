@@ -4,14 +4,17 @@
 package com.thinkgem.jeesite.modules.infc.web;
 
 import com.google.common.collect.Maps;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.account.entity.FinAccount;
 import com.thinkgem.jeesite.modules.account.service.FinAccountService;
 import com.thinkgem.jeesite.modules.finance.entity.FinRecord;
 import com.thinkgem.jeesite.modules.finance.service.FinRecordService;
+import com.thinkgem.jeesite.modules.infc.entity.DataStatus;
 import com.thinkgem.jeesite.modules.infc.entity.DataStatusList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +41,43 @@ public class InfcFinAccountController extends BaseController {
     @Autowired
     private FinRecordService finRecordService;
 
+
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "detailFinAccount",method = RequestMethod.GET)
+    public String detailFinAccount(FinAccount finAccount,HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        FinAccount entity = null;
+        if (StringUtils.isNotBlank(id)){
+            entity = finAccountService.getSingle(finAccount);
+        }
+        if (entity == null){
+            entity = new FinAccount();
+        }
+        Map<String, Object> map = getFinDetailMap(entity);
+        DataStatus status = new DataStatus();
+        status.setSuccess("true");
+        status.setStatusMessage("ok");
+        status.setData(map);
+        String r = this.renderString(response,status);
+        return r;
+    }
+    /**
+     * 将对象映射为 FinAccount 详细信息的 Map
+     * @author ld
+     * @date  20:38 2019/3/4
+     */
+    private Map<String, Object> getFinDetailMap(FinAccount entity) {
+        Map<String,Object> map = Maps.newHashMap();
+
+        map.put("amount",entity.getAmount());
+        map.put("acType",entity.getAcType());
+        map.put("acName",entity.getAcName());
+        map.put("cardNum",entity.getCardNum());
+        return map;
+    }
     /**
      * 返回该账户下的所有记录信息列表
      * @author wjl
@@ -91,6 +131,7 @@ public class InfcFinAccountController extends BaseController {
                 Map<String,Object> map = Maps.newHashMap();
                 map.put("id",entity.getId()) ;
                 map.put("acName",entity.getAcName());
+                map.put("acType",entity.getAcType());
                 result.add(map);
             }
             status.setData(result);
@@ -141,5 +182,49 @@ public class InfcFinAccountController extends BaseController {
         }
         return this.renderString(response,status);
         /*return r;*/
+    }
+    @ResponseBody
+    @RequestMapping(value = "deleteById",method = RequestMethod.GET)
+    public String deleteById(FinAccount finAccount,HttpServletRequest request,HttpServletResponse response) {
+        DataStatusList status = new DataStatusList();
+        try  {
+            String id = request.getParameter("id");
+            finAccount.setId(id);
+            boolean delete = finAccountService.delete(finAccount);
+            if(delete){
+                status.setSuccess("true");
+                status.setStatusMessage("ok");
+            }else {
+                status.setSuccess("false");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            status.setSuccess("false");
+            status.setStatusMessage(e.getMessage());
+        }
+        String r = this.renderString(response,status);
+        return r;
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "addFinAccount",method = RequestMethod.POST)
+    public String addFinAccount(@RequestBody FinAccount finAccount, HttpServletRequest request, HttpServletResponse response) {
+
+        DataStatus status = new DataStatus();
+
+        try {
+            finAccountService.save(finAccount);
+            status.setSuccess("true");
+            status.setStatusMessage("ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            status.setSuccess("false");
+            status.setStatusMessage("新增账户失败");
+        }
+        String r = this.renderString(response,status);
+        return r;
     }
 }

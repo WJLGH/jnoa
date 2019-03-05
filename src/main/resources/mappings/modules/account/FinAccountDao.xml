@@ -180,5 +180,17 @@
 		DELETE FROM fin_account
 		WHERE id = #{id}
 	</update>
+
+	<select id="getSingle" resultType="FinAccount">
+		SELECT
+		a.id AS "id",
+		a.ac_name AS "acName",
+		a.ac_type AS "acType",
+		a.amount AS "amount",
+		a.card_num AS "cardNum"
+		FROM fin_account a
+		WHERE a.id = #{id}
+
+	</select>
 	
 </mapper>

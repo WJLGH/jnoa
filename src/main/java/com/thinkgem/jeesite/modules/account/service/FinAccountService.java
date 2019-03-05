@@ -50,8 +50,9 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(FinAccount finAccount) {
+	public boolean delete(FinAccount finAccount) {
 		super.delete(finAccount);
+		return false;
 	}
 
 
@@ -76,5 +77,9 @@ public class FinAccountService extends CrudService<FinAccountDao, FinAccount> {
     }
 	public FinAccount getDeptSum(FinAccount finAccount) {
 		return finAccountDao.getDeptSum(finAccount);
+	}
+	public FinAccount getSingle(FinAccount finAccount) {
+		FinAccount finAccount1 = finAccountDao.getSingle(finAccount);
+		return finAccount1;
 	}
 }

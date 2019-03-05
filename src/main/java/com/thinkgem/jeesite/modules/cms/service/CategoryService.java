@@ -141,11 +141,12 @@ public class CategoryService extends TreeService<CategoryDao, Category> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(Category category) {
+	public boolean delete(Category category) {
 		super.delete(category);
 		UserUtils.removeCache(CACHE_CATEGORY_LIST);
 		CmsUtils.removeCache("mainNavList_"+category.getSite().getId());
-	}
+        return false;
+    }
 	
 	/**
 	 * 通过编号获取栏目列表

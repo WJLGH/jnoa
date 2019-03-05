@@ -73,10 +73,11 @@ public class OaTaskService extends CrudService<OaTaskDao, OaTask> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(OaTask oaTask) {
+	public boolean delete(OaTask oaTask) {
 		super.delete(oaTask);
 		oaTaskRecordDao.delete(new OaTaskRecord(oaTask));
-	}
+        return false;
+    }
 
 /**
 * @Description:    保存app端数据

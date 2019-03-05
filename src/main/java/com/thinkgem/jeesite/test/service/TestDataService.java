@@ -40,8 +40,9 @@ public class TestDataService extends CrudService<TestDataDao, TestData> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(TestData testData) {
+	public boolean delete(TestData testData) {
 		super.delete(testData);
-	}
+        return false;
+    }
 	
 }

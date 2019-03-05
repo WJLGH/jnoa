@@ -86,10 +86,11 @@ public class OaTaskRecordService extends CrudService<OaTaskRecordDao, OaTaskReco
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(OaTaskRecord oaTaskRecord) {
+	public boolean delete(OaTaskRecord oaTaskRecord) {
 		super.delete(oaTaskRecord);
 		oaTaskReplyDao.delete(new OaTaskReply(oaTaskRecord));
-	}
+        return false;
+    }
 
 	/**
 	* @Description:    新增app端口的任务回复记录

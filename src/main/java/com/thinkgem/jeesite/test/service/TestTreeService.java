@@ -39,8 +39,9 @@ public class TestTreeService extends TreeService<TestTreeDao, TestTree> {
 	}
 	
 	@Transactional(readOnly = false)
-	public void delete(TestTree testTree) {
+	public boolean delete(TestTree testTree) {
 		super.delete(testTree);
-	}
+        return false;
+    }
 	
 }
